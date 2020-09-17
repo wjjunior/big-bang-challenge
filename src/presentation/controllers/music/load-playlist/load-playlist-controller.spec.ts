@@ -1,5 +1,6 @@
 import { LoadPlaylistController } from './load-playlist-controller'
 import { MusicModel, LoadPlaylist } from './load-playlist-controller-protocols'
+import { ok } from '../../../helpers/http/http-helper'
 
 const makeFakePlaylist = (): MusicModel[] => {
   return [{
@@ -36,5 +37,11 @@ describe('LoadPlaylist Controller', () => {
     const loadSpy = jest.spyOn(loadPlaylistStub, 'load')
     await sut.handle({})
     expect(loadSpy).toHaveBeenCalled()
+  })
+
+  test('Should return 200 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(ok(makeFakePlaylist()))
   })
 })
