@@ -40,4 +40,10 @@ describe('DbLoadPlaylist', () => {
     await sut.load()
     expect(loadAllSpy).toHaveBeenCalled()
   })
+
+  test('Should return a playlist on success', async () => {
+    const { sut } = makeSut()
+    const playlist = await sut.load()
+    expect(playlist).toEqual(makeFakePlaylist())
+  })
 })
