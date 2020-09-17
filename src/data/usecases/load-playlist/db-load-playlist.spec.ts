@@ -46,4 +46,11 @@ describe('DbLoadPlaylist', () => {
     const playlist = await sut.load()
     expect(playlist).toEqual(makeFakePlaylist())
   })
+
+  test('Should throws if LoadPlanetsRepository throws', async () => {
+    const { sut, loadPlaylistRepositoryStub } = makeSut()
+    jest.spyOn(loadPlaylistRepositoryStub, 'loadAll').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const promise = sut.load()
+    await expect(promise).rejects.toThrow()
+  })
 })
