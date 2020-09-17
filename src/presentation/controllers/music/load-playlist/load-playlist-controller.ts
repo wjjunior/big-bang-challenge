@@ -1,9 +1,10 @@
 import { Controller, HttpRequest, HttpResponse, LoadPlaylist } from './load-playlist-controller-protocols'
+import { ok } from '../../../helpers/http/http-helper'
 
 export class LoadPlaylistController implements Controller {
   constructor (private readonly loadPlaylist: LoadPlaylist) {}
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    await this.loadPlaylist.load()
-    return null
+    const playlist = await this.loadPlaylist.load()
+    return ok(playlist)
   }
 }
