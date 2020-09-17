@@ -10,16 +10,33 @@ const makeFakePlaylist = (): MusicModel[] => {
   }]
 }
 
+interface SutTypes {
+  sut: DbLoadPlaylist
+  loadPlaylistRepositoryStub: LoadPlaylistRepository
+}
+
+const makeLoadPlaylistRepository = (): LoadPlaylistRepository => {
+  class LoadPlaylistRepositoryStub implements LoadPlaylistRepository {
+    async loadAll (): Promise<MusicModel[]> {
+      return new Promise(resolve => resolve(makeFakePlaylist()))
+    }
+  }
+  return new LoadPlaylistRepositoryStub()
+}
+
+const makeSut = (): SutTypes => {
+  const loadPlaylistRepositoryStub = makeLoadPlaylistRepository()
+  const sut = new DbLoadPlaylist(loadPlaylistRepositoryStub)
+  return {
+    sut,
+    loadPlaylistRepositoryStub
+  }
+}
+
 describe('DbLoadPlaylist', () => {
   test('Should call LoadPlaylistRepository', async () => {
-    class LoadPlaylistRepositoryStub implements LoadPlaylistRepository {
-      async loadAll (): Promise<MusicModel[]> {
-        return new Promise(resolve => resolve(makeFakePlaylist()))
-      }
-    }
-    const loadPlaylistRepositoryStub = new LoadPlaylistRepositoryStub()
+    const { sut, loadPlaylistRepositoryStub } = makeSut()
     const loadAllSpy = jest.spyOn(loadPlaylistRepositoryStub, 'loadAll')
-    const sut = new DbLoadPlaylist(loadPlaylistRepositoryStub)
     await sut.load()
     expect(loadAllSpy).toHaveBeenCalled()
   })
