@@ -4,8 +4,8 @@ import { LoadPlaylistRepository } from '../../../data/protocols/db/music/load-pl
 
 export class DbLoadPlaylist implements LoadPlaylist {
   constructor (private readonly loadPlaylistRepository: LoadPlaylistRepository) {}
-  async load (): Promise<MusicModel[]> {
-    const playlist = await this.loadPlaylistRepository.loadAll()
+  async load (category: string): Promise<MusicModel[]> {
+    const playlist = await this.loadPlaylistRepository.loadPlaylistByCategory(category)
     return playlist
   }
 }

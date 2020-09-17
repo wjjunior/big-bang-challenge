@@ -1,5 +1,5 @@
 import { MusicModel } from '../../../../domain/models/music'
 
 export interface LoadPlaylistRepository {
-  loadAll: () => Promise<MusicModel[]>
+  loadPlaylistByCategory: (category: string) => Promise<MusicModel[]>
 }
