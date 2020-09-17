@@ -7,16 +7,33 @@ const makeFakePlaylist = (): MusicModel[] => {
   }]
 }
 
+interface SutTypes {
+  sut: LoadPlaylistController
+  loadPlaylistStub: LoadPlaylist
+}
+
+const makeLoadPlaylist = (): LoadPlaylist => {
+  class LoadPlaylistStub implements LoadPlaylist {
+    async load (): Promise<MusicModel[]> {
+      return new Promise(resolve => resolve(makeFakePlaylist()))
+    }
+  }
+  return new LoadPlaylistStub()
+}
+
+const makeSut = (): SutTypes => {
+  const loadPlaylistStub = makeLoadPlaylist()
+  const sut = new LoadPlaylistController(loadPlaylistStub)
+  return {
+    sut,
+    loadPlaylistStub
+  }
+}
+
 describe('LoadPlaylist Controller', () => {
   test('Should call LoadPlaylist', async () => {
-    class LoadPlaylistStub implements LoadPlaylist {
-      async load (): Promise<MusicModel[]> {
-        return new Promise(resolve => resolve(makeFakePlaylist()))
-      }
-    }
-    const loadPlaylistStub = new LoadPlaylistStub()
+    const { sut, loadPlaylistStub } = makeSut()
     const loadSpy = jest.spyOn(loadPlaylistStub, 'load')
-    const sut = new LoadPlaylistController(loadPlaylistStub)
     await sut.handle({})
     expect(loadSpy).toHaveBeenCalled()
   })
