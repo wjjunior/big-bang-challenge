@@ -1,5 +1,3 @@
-import { MusicModel } from '../../models/music'
-
 export type LoadPlaylistParams = {
   cityName?: string
   lat?: number
@@ -8,5 +6,5 @@ export type LoadPlaylistParams = {
 }
 
 export interface LoadPlaylist {
-  load: (data: LoadPlaylistParams) => Promise<MusicModel[]>
+  load: (data: LoadPlaylistParams) => Promise<string[]>
 }
