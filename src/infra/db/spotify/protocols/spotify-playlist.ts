@@ -1,6 +1,8 @@
 export interface SpotifyPlaylists {
-  href: string
-  items: SpotifyPlaylist[]
+  playlists: {
+    href: string
+    items: SpotifyPlaylist[]
+  }
 }
 
 export interface SpotifyPlaylist {

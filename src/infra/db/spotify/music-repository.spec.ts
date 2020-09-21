@@ -13,13 +13,15 @@ beforeAll(() => {
     .mockReturnValueOnce(
       new Promise((resolve) =>
         resolve({
-          href: 'any_href',
-          items: [
-            {
-              id: 'any__playlist_id',
-              name: 'any_playlist_name'
-            }
-          ]
+          playlists: {
+            href: 'any_href',
+            items: [
+              {
+                id: 'any__playlist_id',
+                name: 'any_playlist_name'
+              }
+            ]
+          }
         })
       )
     )
@@ -55,7 +57,9 @@ describe('Music Spotify Repository', () => {
   describe('loadPlaylistByCategory()', () => {
     test('Should load a playlist by category', async () => {
       const { sut } = makeSut()
-      const musics = await sut.loadPlaylistByCategory(makeFakeLoadPlaylistByCategoryParams())
+      const musics = await sut.loadPlaylistByCategory(
+        makeFakeLoadPlaylistByCategoryParams()
+      )
       expect(musics.length).toBe(2)
     })
   })
