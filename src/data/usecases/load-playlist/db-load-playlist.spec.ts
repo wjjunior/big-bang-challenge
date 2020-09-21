@@ -1,6 +1,8 @@
 import { LoadPlaylistParams } from '@/domain/usecases/music/load-playlist'
-import { LoadPlaylistByCategoryParams, LoadPlaylistRepository } from '../../../data/protocols/db/music/load-playlist-repository'
-import { MusicModel } from '../../../domain/models/music'
+import {
+  LoadPlaylistByCategoryParams,
+  LoadPlaylistRepository
+} from '../../../data/protocols/db/music/load-playlist-repository'
 import { DbLoadPlaylist } from './db-load-playlist'
 
 const makeFakeLoadPlaylistParams = (): LoadPlaylistParams => ({
@@ -8,12 +10,8 @@ const makeFakeLoadPlaylistParams = (): LoadPlaylistParams => ({
   accessToken: 'any_token'
 })
 
-const makeFakePlaylist = (): MusicModel[] => {
-  return [{
-    name: 'any_name'
-  }, {
-    name: 'other_name'
-  }]
+const makeFakePlaylist = (): string[] => {
+  return ['any_name', 'other_name']
 }
 
 interface SutTypes {
@@ -23,8 +21,10 @@ interface SutTypes {
 
 const makeLoadPlaylistRepository = (): LoadPlaylistRepository => {
   class LoadPlaylistRepositoryStub implements LoadPlaylistRepository {
-    async loadPlaylistByCategory (data: LoadPlaylistByCategoryParams): Promise<MusicModel[]> {
-      return new Promise(resolve => resolve(makeFakePlaylist()))
+    async loadPlaylistByCategory (
+      data: LoadPlaylistByCategoryParams
+    ): Promise<string[]> {
+      return new Promise((resolve) => resolve(makeFakePlaylist()))
     }
   }
   return new LoadPlaylistRepositoryStub()
@@ -42,7 +42,10 @@ const makeSut = (): SutTypes => {
 describe('DbLoadPlaylist', () => {
   test('Should call LoadPlaylistRepository', async () => {
     const { sut, loadPlaylistRepositoryStub } = makeSut()
-    const loadAllSpy = jest.spyOn(loadPlaylistRepositoryStub, 'loadPlaylistByCategory')
+    const loadAllSpy = jest.spyOn(
+      loadPlaylistRepositoryStub,
+      'loadPlaylistByCategory'
+    )
     await sut.load(makeFakeLoadPlaylistParams())
     expect(loadAllSpy).toHaveBeenCalled()
   })
@@ -55,7 +58,11 @@ describe('DbLoadPlaylist', () => {
 
   test('Should throws if LoadPlanetsRepository throws', async () => {
     const { sut, loadPlaylistRepositoryStub } = makeSut()
-    jest.spyOn(loadPlaylistRepositoryStub, 'loadPlaylistByCategory').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest
+      .spyOn(loadPlaylistRepositoryStub, 'loadPlaylistByCategory')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error()))
+      )
     const promise = sut.load(makeFakeLoadPlaylistParams())
     await expect(promise).rejects.toThrow()
   })

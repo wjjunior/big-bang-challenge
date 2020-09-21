@@ -32,10 +32,14 @@ beforeAll(() => {
         href: 'any_href',
         items: [
           {
-            name: 'any_music_name'
+            track: {
+              name: 'any_music_name'
+            }
           },
           {
-            name: 'other_music_name'
+            track: {
+              name: 'other_music_name'
+            }
           }
         ]
       })

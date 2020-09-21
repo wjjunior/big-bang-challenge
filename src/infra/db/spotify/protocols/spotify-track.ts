@@ -4,5 +4,7 @@ export interface SpotifyTrackList {
 }
 
 export interface SpotifyTrack {
-  name: string
+  track: {
+    name: string
+  }
 }
