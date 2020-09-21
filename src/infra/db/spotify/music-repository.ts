@@ -1,19 +1,16 @@
-import { LoadPlaylistRepository } from '../../../data/protocols/db/music/load-playlist-repository'
+import { LoadPlaylistByCategoryParams, LoadPlaylistRepository } from '../../../data/protocols/db/music/load-playlist-repository'
 import { MusicModel } from '../../../domain/models/music'
 import SpotifyApi from './helpers/spotify-api'
 import { SpotifyTrack } from './protocols'
 
 export class MusicRepository implements LoadPlaylistRepository {
-  private readonly spotifyApi: SpotifyApi
-  constructor (accessToken: string) {
-    this.spotifyApi = new SpotifyApi(accessToken)
-  }
-
-  async loadPlaylistByCategory (category: string): Promise<MusicModel[]> {
-    const playlistResponse = await this.spotifyApi.getPlaylistsByCategory(
+  async loadPlaylistByCategory (data: LoadPlaylistByCategoryParams): Promise<MusicModel[]> {
+    const { accessToken, category } = data
+    const spotifyApi = new SpotifyApi(accessToken)
+    const playlistResponse = await spotifyApi.getPlaylistsByCategory(
       category
     )
-    const tracksResponse = await this.spotifyApi.getPlaylistTracks(
+    const tracksResponse = await spotifyApi.getPlaylistTracks(
       playlistResponse.items[0].id
     )
 

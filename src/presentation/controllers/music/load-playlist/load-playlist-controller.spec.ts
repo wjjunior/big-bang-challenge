@@ -1,6 +1,13 @@
 import { LoadPlaylistController } from './load-playlist-controller'
-import { MusicModel, LoadPlaylist } from './load-playlist-controller-protocols'
+import { MusicModel, LoadPlaylist, HttpRequest } from './load-playlist-controller-protocols'
 import { ok, serverError } from '../../../helpers/http/http-helper'
+
+const mockRequest = (): HttpRequest => ({
+  body: {
+    cityName: 'any_city'
+  },
+  accessToken: 'any_token'
+})
 
 const makeFakePlaylist = (): MusicModel[] => {
   return [
@@ -40,13 +47,13 @@ describe('LoadPlaylist Controller', () => {
   test('Should call LoadPlaylist', async () => {
     const { sut, loadPlaylistStub } = makeSut()
     const loadSpy = jest.spyOn(loadPlaylistStub, 'load')
-    await sut.handle({})
+    await sut.handle(mockRequest())
     expect(loadSpy).toHaveBeenCalled()
   })
 
   test('Should return 200 on success', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok(makeFakePlaylist()))
   })
 
@@ -57,7 +64,7 @@ describe('LoadPlaylist Controller', () => {
       .mockReturnValueOnce(
         new Promise((resolve, reject) => reject(new Error()))
       )
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 })

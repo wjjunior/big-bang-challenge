@@ -6,7 +6,9 @@ export class LoadPlaylistController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const playlist = await this.loadPlaylist.load()
+      const { cityName, lat, lon } = httpRequest.body
+      const accessToken = httpRequest.accessToken
+      const playlist = await this.loadPlaylist.load({ cityName, lat, lon, accessToken })
       return ok(playlist)
     } catch (error) {
       return serverError(error)

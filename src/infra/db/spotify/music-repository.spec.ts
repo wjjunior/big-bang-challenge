@@ -1,8 +1,11 @@
 import { MusicRepository } from './music-repository'
 import SpotifyApi from './helpers/spotify-api'
+import { LoadPlaylistByCategoryParams } from '@/data/protocols/db/music/load-playlist-repository'
 
-const token = 'any_token'
-const category = 'any_category'
+const makeFakeLoadPlaylistByCategoryParams = (): LoadPlaylistByCategoryParams => ({
+  accessToken: 'any_token',
+  category: 'any_category'
+})
 
 beforeAll(() => {
   jest
@@ -42,7 +45,7 @@ interface SutTypes {
   sut: MusicRepository
 }
 const makeSut = (): SutTypes => {
-  const sut = new MusicRepository(token)
+  const sut = new MusicRepository()
   return {
     sut
   }
@@ -52,7 +55,7 @@ describe('Music Spotify Repository', () => {
   describe('loadPlaylistByCategory()', () => {
     test('Should load a playlist by category', async () => {
       const { sut } = makeSut()
-      const musics = await sut.loadPlaylistByCategory(category)
+      const musics = await sut.loadPlaylistByCategory(makeFakeLoadPlaylistByCategoryParams())
       expect(musics.length).toBe(2)
     })
   })
