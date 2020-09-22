@@ -43,6 +43,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "fast-glob": "^3.2.4",
+    "joi": "^17.2.1",
     "node-fetch": "^2.6.1"
   }
 }
