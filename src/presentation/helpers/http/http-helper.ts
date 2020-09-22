@@ -1,5 +1,5 @@
 import { HttpResponse } from '../../protocols/http'
-import { ServerError, UnauthorizedError } from '../../errors'
+import { ServerError } from '../../errors'
 
 export const badRequest = (error: Error): HttpResponse => ({
   statusCode: 400,
@@ -11,14 +11,9 @@ export const forbidden = (error: Error): HttpResponse => ({
   body: error
 })
 
-export const unauthorized = (): HttpResponse => ({
-  statusCode: 401,
-  body: new UnauthorizedError()
-})
-
 export const serverError = (error: Error): HttpResponse => ({
   statusCode: 500,
-  body: new ServerError(error.stack)
+  body: new ServerError(error.message)
 })
 
 export const ok = (data: any): HttpResponse => ({

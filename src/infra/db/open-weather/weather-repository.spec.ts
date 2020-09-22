@@ -7,6 +7,7 @@ beforeAll(() => {
     .mockReturnValueOnce(
       new Promise((resolve) =>
         resolve({
+          cod: 200,
           main: {
             temp: 200
           }
@@ -17,6 +18,7 @@ beforeAll(() => {
   jest.spyOn(OpenWeatherApi.prototype, 'getTemperatureByCoordinates').mockReturnValueOnce(
     new Promise((resolve) =>
       resolve({
+        cod: 200,
         main: {
           temp: 150
         }

@@ -20,6 +20,9 @@ export class DbLoadPlaylist implements LoadPlaylist {
         lon
       }
     )
+    if (!temperature) {
+      return null
+    }
     const celsiusTemperature = temperature - 273.15
     let category: string
     if (celsiusTemperature < 10) {

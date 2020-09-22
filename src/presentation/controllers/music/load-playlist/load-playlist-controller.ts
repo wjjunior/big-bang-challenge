@@ -1,5 +1,6 @@
 import { Controller, HttpRequest, HttpResponse, LoadPlaylist } from './load-playlist-controller-protocols'
-import { ok, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, ok, serverError } from '../../../helpers/http/http-helper'
+import { InvalidParamError } from '../../../../presentation/errors'
 
 export class LoadPlaylistController implements Controller {
   constructor (private readonly loadPlaylist: LoadPlaylist) {}
@@ -9,6 +10,13 @@ export class LoadPlaylistController implements Controller {
       const { cityName, lat, lon } = httpRequest.body
       const accessToken = httpRequest.accessToken
       const playlist = await this.loadPlaylist.load({ cityName, lat, lon, accessToken })
+      if (!playlist) {
+        if (cityName) {
+          return badRequest(new InvalidParamError('The received city name is invalid'))
+        } else {
+          return badRequest(new InvalidParamError('The received coordinates are invalid'))
+        }
+      }
       return ok(playlist)
     } catch (error) {
       return serverError(error)
