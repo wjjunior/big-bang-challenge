@@ -3,7 +3,12 @@ import {
   LoadPlaylist,
   HttpRequest
 } from './load-playlist-controller-protocols'
-import { ok, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, ok, serverError } from '../../../helpers/http/http-helper'
+import {
+  InvalidParamError,
+  MissingParamError
+} from '../../../../presentation/errors'
+import { ValidationSpy } from '../../../../presentation/test/mock-validation'
 
 const mockRequest = (): HttpRequest => ({
   body: {
@@ -19,6 +24,7 @@ const makeFakePlaylist = (): string[] => {
 interface SutTypes {
   sut: LoadPlaylistController
   loadPlaylistStub: LoadPlaylist
+  validationSpy: ValidationSpy
 }
 
 const makeLoadPlaylist = (): LoadPlaylist => {
@@ -32,10 +38,12 @@ const makeLoadPlaylist = (): LoadPlaylist => {
 
 const makeSut = (): SutTypes => {
   const loadPlaylistStub = makeLoadPlaylist()
-  const sut = new LoadPlaylistController(loadPlaylistStub)
+  const validationSpy = new ValidationSpy()
+  const sut = new LoadPlaylistController(loadPlaylistStub, validationSpy)
   return {
     sut,
-    loadPlaylistStub
+    loadPlaylistStub,
+    validationSpy
   }
 }
 
@@ -62,5 +70,37 @@ describe('LoadPlaylist Controller', () => {
       )
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 400 if Validation returns an error', async () => {
+    const { sut, validationSpy } = makeSut()
+    validationSpy.error = new MissingParamError('any_error')
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(badRequest(validationSpy.error))
+  })
+
+  test('Should return 400 if invalid city is provided', async () => {
+    const { sut, loadPlaylistStub } = makeSut()
+    jest
+      .spyOn(loadPlaylistStub, 'load')
+      .mockReturnValueOnce(new Promise((resolve) => resolve(null)))
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(
+      badRequest(new InvalidParamError('The received city name is invalid'))
+    )
+  })
+
+  test('Should return 400 if invalid coordinates are provided', async () => {
+    const { sut, loadPlaylistStub } = makeSut()
+    jest
+      .spyOn(loadPlaylistStub, 'load')
+      .mockReturnValueOnce(new Promise((resolve) => resolve(null)))
+    const httpResponse = await sut.handle({
+      body: {},
+      accessToken: 'any_token'
+    })
+    expect(httpResponse).toEqual(
+      badRequest(new InvalidParamError('The received coordinates are invalid'))
+    )
   })
 })
