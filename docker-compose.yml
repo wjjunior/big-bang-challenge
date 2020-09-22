@@ -1,0 +1,12 @@
+version: "3"
+services:
+  # Node
+  bigbang-challenge-app:
+    build: .
+    container_name: bigbang-challenge-app
+    restart: unless-stopped
+    working_dir: /usr/src/bigbang-challenge/
+    volumes:
+      - ./:/usr/src/bigbang-challenge/
+    ports:
+      - 5050:5050
