@@ -1,3 +1,4 @@
+import { CurrentTemperatureRepository, LoadTemperatureParams } from '@/data/protocols/db/weather/current-temperature-repository'
 import { LoadPlaylistParams } from '@/domain/usecases/music/load-playlist'
 import {
   LoadPlaylistByCategoryParams,
@@ -17,6 +18,7 @@ const makeFakePlaylist = (): string[] => {
 interface SutTypes {
   sut: DbLoadPlaylist
   loadPlaylistRepositoryStub: LoadPlaylistRepository
+  currentTemperatureRepositoryStub: CurrentTemperatureRepository
 }
 
 const makeLoadPlaylistRepository = (): LoadPlaylistRepository => {
@@ -30,24 +32,42 @@ const makeLoadPlaylistRepository = (): LoadPlaylistRepository => {
   return new LoadPlaylistRepositoryStub()
 }
 
+const makeCurrentTemperatureRepository = (): CurrentTemperatureRepository => {
+  class CurrentTemperatureRepositoryStub implements CurrentTemperatureRepository {
+    async loadTemperature (
+      data: LoadTemperatureParams
+    ): Promise<number> {
+      return new Promise((resolve) => resolve(200))
+    }
+  }
+  return new CurrentTemperatureRepositoryStub()
+}
+
 const makeSut = (): SutTypes => {
   const loadPlaylistRepositoryStub = makeLoadPlaylistRepository()
-  const sut = new DbLoadPlaylist(loadPlaylistRepositoryStub)
+  const currentTemperatureRepositoryStub = makeCurrentTemperatureRepository()
+  const sut = new DbLoadPlaylist(loadPlaylistRepositoryStub, currentTemperatureRepositoryStub)
   return {
     sut,
-    loadPlaylistRepositoryStub
+    loadPlaylistRepositoryStub,
+    currentTemperatureRepositoryStub
   }
 }
 
 describe('DbLoadPlaylist', () => {
   test('Should call LoadPlaylistRepository', async () => {
-    const { sut, loadPlaylistRepositoryStub } = makeSut()
+    const { sut, loadPlaylistRepositoryStub, currentTemperatureRepositoryStub } = makeSut()
     const loadAllSpy = jest.spyOn(
       loadPlaylistRepositoryStub,
       'loadPlaylistByCategory'
     )
+    const loadTemperatureSpy = jest.spyOn(
+      currentTemperatureRepositoryStub,
+      'loadTemperature'
+    )
     await sut.load(makeFakeLoadPlaylistParams())
     expect(loadAllSpy).toHaveBeenCalled()
+    expect(loadTemperatureSpy).toHaveBeenCalled()
   })
 
   test('Should return a playlist on success', async () => {
@@ -60,6 +80,17 @@ describe('DbLoadPlaylist', () => {
     const { sut, loadPlaylistRepositoryStub } = makeSut()
     jest
       .spyOn(loadPlaylistRepositoryStub, 'loadPlaylistByCategory')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error()))
+      )
+    const promise = sut.load(makeFakeLoadPlaylistParams())
+    await expect(promise).rejects.toThrow()
+  })
+
+  test('Should throws if CurrentTemperatureRepository throws', async () => {
+    const { sut, currentTemperatureRepositoryStub } = makeSut()
+    jest
+      .spyOn(currentTemperatureRepositoryStub, 'loadTemperature')
       .mockReturnValueOnce(
         new Promise((resolve, reject) => reject(new Error()))
       )
