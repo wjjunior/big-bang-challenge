@@ -24,11 +24,11 @@ export class DbLoadPlaylist implements LoadPlaylist {
     let category: string
     if (celsiusTemperature < 10) {
       category = 'classic'
-    } else if (celsiusTemperature >= 10 && temperature <= 14) {
+    } else if (celsiusTemperature >= 10 && celsiusTemperature <= 14) {
       category = 'rock'
-    } else if (celsiusTemperature >= 15 && temperature <= 30) {
+    } else if (celsiusTemperature >= 15 && celsiusTemperature <= 30) {
       category = 'pop'
-    } else if (celsiusTemperature > 30) {
+    } else {
       category = 'party'
     }
     const playlist = await this.loadPlaylistRepository.loadPlaylistByCategory({

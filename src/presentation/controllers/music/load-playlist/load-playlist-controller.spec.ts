@@ -1,5 +1,8 @@
 import { LoadPlaylistController } from './load-playlist-controller'
-import { MusicModel, LoadPlaylist, HttpRequest } from './load-playlist-controller-protocols'
+import {
+  LoadPlaylist,
+  HttpRequest
+} from './load-playlist-controller-protocols'
 import { ok, serverError } from '../../../helpers/http/http-helper'
 
 const mockRequest = (): HttpRequest => ({
@@ -9,15 +12,8 @@ const mockRequest = (): HttpRequest => ({
   accessToken: 'any_token'
 })
 
-const makeFakePlaylist = (): MusicModel[] => {
-  return [
-    {
-      name: 'any_name'
-    },
-    {
-      name: 'other_name'
-    }
-  ]
+const makeFakePlaylist = (): string[] => {
+  return ['any_name', 'other_name']
 }
 
 interface SutTypes {
@@ -27,7 +23,7 @@ interface SutTypes {
 
 const makeLoadPlaylist = (): LoadPlaylist => {
   class LoadPlaylistStub implements LoadPlaylist {
-    async load (): Promise<MusicModel[]> {
+    async load (): Promise<string[]> {
       return new Promise((resolve) => resolve(makeFakePlaylist()))
     }
   }
