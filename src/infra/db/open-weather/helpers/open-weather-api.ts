@@ -1,12 +1,13 @@
 import fetch from 'node-fetch'
 import { CurrentWeatherResponse } from '../protocols/current-weather'
 import { OpenWeatherApi } from '../protocols/open-weather-api'
+import env from '../../../../main/config/env'
 
 export default class OpenWeatherApiHelper implements OpenWeatherApi {
   private readonly apiToken: string
 
   constructor () {
-    this.apiToken = '340463195db56e4ec72032466cfa74ee'
+    this.apiToken = env.openWeatherApiKey
   }
 
   async getTemperatureByCityName (

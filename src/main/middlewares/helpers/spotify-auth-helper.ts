@@ -1,8 +1,9 @@
 import fetch from 'node-fetch'
 import { SpotifyAuthRequest } from '../protocols/spotify-auth-request'
+import env from '../../config/env'
 
 export const spotifyAuthRequest = async (): Promise<SpotifyAuthRequest> => {
-  const authorization = Buffer.from('cb6924bf00a544fe923cf4e45f349b9e:628521daf41c4447b1707058ff1c3c56').toString('base64')
+  const authorization = Buffer.from(`${env.spotifyClientId}:${env.spotifyClientSecret}`).toString('base64')
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'post',
     headers: {
