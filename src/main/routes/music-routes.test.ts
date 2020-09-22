@@ -4,7 +4,7 @@ import app from '../config/app'
 describe('Music Routes', () => {
   test('Should return music array on success by city name', async () => {
     await request(app)
-      .post('/api/sugest-musics')
+      .post('/api/musics/playlist')
       .send({
         cityName: 'Belo Horizonte'
       })
@@ -13,7 +13,7 @@ describe('Music Routes', () => {
 
   test('Should return music array on success by coordinates', async () => {
     await request(app)
-      .post('/api/sugest-musics')
+      .post('/api/musics/playlist')
       .send({
         lat: 51.5072,
         lon: -0.1275
