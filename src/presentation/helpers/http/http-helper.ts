@@ -1,7 +1,8 @@
 import { HttpResponse } from '../../protocols/http'
 import { ServerError } from '../../errors'
 
-export const badRequest = (error: Error): HttpResponse => ({
+type Sometime<T> = T | Promise<T>
+export const badRequest = (error: Sometime<Error | undefined>): HttpResponse => ({
   statusCode: 400,
   body: error
 })
