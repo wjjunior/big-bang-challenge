@@ -52,9 +52,10 @@ Tentei seguir ao máximo os princípios do SOLID e DDD.
 
 O objetivo foi isolar os componentes e regras de negócio da API das dependências de infraestrutura, dessa forma ficaria fácil substituir qualquer fonte de dados e evitar a dependência do express.
 
-Também utilizei packages de padronização de código e commits como o eslint, husky, git-commit-msg-linter e lint-staged.
+Também utilizei packages de padronização de código e commits como o eslint, husky, git-commit-msg-linter, lint-staged e o swagger-ui-express para gerar a documentação funcional da API.
 
-Fiz todo o projeto utilizando prática TDD, porém devido ao husky sempre executar todos os testes antes de aceitar o commit é necessário commitar os arquivos alterados antes do commit "test".
+Optei por utilizar o package Joi para validação dos campos na request desacoplado em um validator para que possa ser facilmente substituído se necessário.
+
 
 > ### Dificuldades
 
