@@ -2,13 +2,8 @@ FROM node:12
 
 WORKDIR /usr/src/bigbang-challenge/
 
-COPY ./package.json /usr/src/bigbang-challenge/
-COPY ./package-lock.json /usr/src/bigbang-challenge/
+COPY package*.json ./
 
-RUN npm install
+RUN npm install --quiet
 
 COPY . .
-
-EXPOSE 5050
-
-CMD npm run dev

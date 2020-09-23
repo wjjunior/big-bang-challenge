@@ -3,10 +3,13 @@ services:
   # Node
   bigbang-challenge-app:
     build: .
+    command: npm run dev
     container_name: bigbang-challenge-app
     restart: unless-stopped
-    working_dir: /usr/src/bigbang-challenge/
     volumes:
       - ./:/usr/src/bigbang-challenge/
+    volumes:
+      - .:/usr/src/bigbang-challenge/
+      - /usr/src/bigbang-challenge/node_modules
     ports:
       - 5050:5050
