@@ -50,7 +50,7 @@ npm run test:ci
 
 Tentei seguir ao máximo os princípios do SOLID e DDD. 
 
-O objetivo foi isolar os componentes e regras de negócio da API das dependências de infraestrutura, dessa forma ficaria fácil substituir qualquer fonte de dados e evitar a dependência do graphQL e Apollo Server.
+O objetivo foi isolar os componentes e regras de negócio da API das dependências de infraestrutura, dessa forma ficaria fácil substituir qualquer fonte de dados e evitar a dependência do express.
 
 Também utilizei packages de padronização de código e commits como o eslint, husky, git-commit-msg-linter e lint-staged.
 
